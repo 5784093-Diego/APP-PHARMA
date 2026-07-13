@@ -2,233 +2,180 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Ruta de bienvenida por defecto
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// ==========================================================
-// 1. PRÁCTICA PROPUESTA: RUTA /categorias
-// ==========================================================
-Route::get('/categorias', function () {
-    
-    
-    $categorias = json_decode(json_encode([
-        ["codigo" => "A02", "categoria" => "Medicamentos para el tratamiento de Trastornos causados por Ácidos"],
-        ["codigo" => "A03", "categoria" => "Medicamentos contra Trastornos Funcionales Gastrointestinales"],
-        ["codigo" => "A04", "categoria" => "Medicamentos Antieméticos y Antinauseosos"],
-        ["codigo" => "A06", "categoria" => "Medicamentos para el Estreñimiento"],
-        ["codigo" => "A07", "categoria" => "Medicamentos Antidiarreicos, Antiinflamatorios y Antiinfecciosos Intestinales"],
-        ["codigo" => "A10", "categoria" => "Medicamentos usados en Diabetes"],
-        ["codigo" => "A11", "categoria" => "Vitaminas"],
-        ["codigo" => "A12", "categoria" => "Suplementos Minerales"]
-    ]));
-
-    // Construimos la tabla en una variable HTML aplicando estilos básicos
-    $html = "<h2>Listado de Categorías Farmacéuticas</h2>";
-    $html .= "<table border='1' cellpadding='8' cellspacing='0' style='border-collapse: collapse; font-family: Arial, sans-serif;'>";
-    $html .= "<tr style='background-color: #f2f2f2;'><th>CÓDIGO</th><th>CATEGORÍA</th></tr>";
-
-    // Recorremos los elementos dinámicamente usando un ciclo foreach
-    foreach ($categorias as $cat) {
-        // Hacemos interpolación usando comillas dobles y las llaves {}
-        $html .= "<tr>
-                    <td>{$cat->codigo}</td>
-                    <td>{$cat->categoria}</td>
-                  </tr>";
-    }
-
-    $html .= "</table>";
-
-    // Retornamos el HTML directamente al navegador
-    return $html;
-});
-
-
-// ==========================================================
-// 2. PRÁCTICA PROPUESTA: RUTA /medicamentos
-// ==========================================================
-Route::get('/medicamentos', function () {
-
-    // Lista de objetos con los datos de los medicamentos (Formato pedido por el profesor)
-    $medicamentos = json_decode(json_encode([
-        ["codigo" => "A02BA02", "num" => "1", "nombre" => "Ranitidina", "dosis" => "50 mg", "forma" => "Líquidos parenterales", "via" => "IM/IV"],
-        ["codigo" => "A02BA03", "num" => "2", "nombre" => "Famotidina", "dosis" => "40 mg", "forma" => "Sólidos orales", "via" => "VO"],
-        ["codigo" => "A02BC01", "num" => "3", "nombre" => "Omeprazol", "dosis" => "20 mg", "forma" => "Sólidos orales", "via" => "VO"],
-        ["codigo" => "A02BC01", "num" => "4", "nombre" => "Omeprazol", "dosis" => "40 mg", "forma" => "Sólidos parenterales", "via" => "IV"],
-        ["codigo" => "A03BA01", "num" => "1", "nombre" => "Atropina (Sulfato)", "dosis" => "0.5-1 mg/mL", "forma" => "Líquidos parenterales", "via" => "SC/IM/IV"],
-        ["codigo" => "A03BA03", "num" => "2", "nombre" => "Hiosciamina (bromuro de n-butil hioscina)", "dosis" => "10 mg", "forma" => "Sólidos orales", "via" => "VO"],
-        ["codigo" => "A03BA03", "num" => "3", "nombre" => "Hiosciamina (bromuro de n-butil hioscina)", "dosis" => "20 mg/mL", "forma" => "Líquidos parenterales", "via" => "IM/IV"],
-        ["codigo" => "A03FA01", "num" => "4", "nombre" => "Metoclopramida (clorhidrato)", "dosis" => "5 mg/mL", "forma" => "Líquidos parenterales", "via" => "IM/IV"],
-        ["codigo" => "A03FA01", "num" => "5", "nombre" => "Metoclopramida (clorhidrato)", "dosis" => "10 mg", "forma" => "Sólidos orales", "via" => "VO"],
-        ["codigo" => "A04AA01", "num" => "1", "nombre" => "Ondansetron", "dosis" => "8 mg", "forma" => "Sólidos orales", "via" => "VO"],
-        ["codigo" => "A04AA01", "num" => "2", "nombre" => "Ondansetron", "dosis" => "2 mg/mL", "forma" => "Líquidos parenterales", "via" => "IV"],
-        ["codigo" => "A04AA02", "num" => "3", "nombre" => "Granisetron", "dosis" => "1 mg", "forma" => "Sólidos orales", "via" => "VO"],
-        ["codigo" => "A04AA02", "num" => "4", "nombre" => "Granisetron", "dosis" => "1 mg/mL", "forma" => "Líquidos parenterales", "via" => "IV"],
-        ["[" => "R06AA11", "num" => "5", "nombre" => "Dimenhidrinato", "dosis" => "50 mg", "forma" => "Sólidos orales", "via" => "VO"],
-        ["codigo" => "R06AA11", "num" => "6", "nombre" => "Dimenhidrinato", "dosis" => "50 mg/mL", "forma" => "Líquidos parenterales", "via" => "IM/IV"]
-    ]));
-
-    // Construimos la tabla de medicamentos en una variable HTML
-    $html = "<h2>Listado de Medicamentos</h2>";
-    $html .= "<table border='1' cellpadding='8' cellspacing='0' style='border-collapse: collapse; font-family: Arial, sans-serif;'>";
-    $html .= "<tr style='background-color: #e3f2fd;'>
-                <th>Código</th>
-                <th>№</th>
-                <th>Nombre</th>
-                <th>Dosis</th>
-                <th>Forma farmacéutica</th>
-                <th>Vía de administración</th>
-              </tr>";
-
-    // Ciclo foreach para iterar y mostrar los medicamentos uno por uno
-    foreach ($medicamentos as $med) {
-        $html .= "<tr>
-                    <td>{$med->codigo}</td>
-                    <td>{$med->num}</td>
-                    <td>{$med->nombre}</td>
-                    <td>{$med->dosis}</td>
-                    <td>{$med->forma}</td>
-                    <td>{$med->via}</td>
-                  </tr>";
-    }
-
-    $html .= "</table>";
-
-    // Retornamos el HTML al navegador
-    return $html;
-});
-
 /*
 |--------------------------------------------------------------------------
-| PARTE 1: EJERCICIOS 1 Y 2
+| PARTE 2: GESTIÓN DE FACTURACIÓN (ESTRUCTURAS COMPLEJAS Y PARÁMETROS)
 |--------------------------------------------------------------------------
 */
 
-// Ejercicio 1: Catálogo de Clientes VIP
-Route::get('/clientes/vip', function () {
-    // 1. Arreglo de objetos clientes
-    $clientes = [
-        (object) ['id' => 1, 'nombre' => 'Carlos Mendoza', 'telefono' => '7766-5544', 'puntos_altruistas' => 150],
-        (object) ['id' => 2, 'nombre' => 'Ana Gutiérrez', 'telefono' => '2233-4455', 'puntos_altruistas' => 320],
-        (object) ['id' => 3, 'nombre' => 'Roberto Tobar', 'telefono' => '7111-2223', 'puntos_altruistas' => 95],
-    ];
+// =========================================================================
+// Ejercicio 4: Historial General de Facturas de Clientes (Tabla Completa)
+// Ruta: GET /facturas/clientes/historial
+// =========================================================================
+Route::get('/facturas/clientes/historial', function () {
+    // 1. Simulación de los datos del aula (Basado exactamente en la proyección del profesor)
+    $facturas = json_decode(json_encode([
+        ["num_factura" => "001", "cliente" => "Karen Criollo", "fecha_emision" => "2026-07-13", "total_pagar" => 150, "estado" => "Pendiente"],
+        ["num_factura" => "002", "cliente" => "Karen Criollo", "fecha_emision" => "2026-07-05", "total_pagar" => 175, "estado" => "Pagada"],
+        ["num_factura" => "003", "cliente" => "Cristofer Guevara", "fecha_emision" => "2026-07-13", "total_pagar" => 200, "estado" => "Pendiente"]
+    ]));
 
-    // 2. Estructura con el diseño exacto de la captura de pantalla
-    $html = '<table border=1 cellspacing=0>
-                <thead>
-                    <tr>
-                        <th>ID CLIENTE</th>
-                        <th>NOMBRE</th>
-                        <th>TELEFONO</th>
-                        <th>PUNTOS ACUMULADOS</th>
-                    </tr>
-                </thead>
-                <tbody>';
+    // 2. Definición e inicio de la estructura de la tabla idéntica a la pizarra
+    $html = "<table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; font-family: sans-serif;'>";
+    $html .= "<thead>
+                <tr style='font-weight: bold;'>
+                    <th>No. FACTURA</th>
+                    <th>CLIENTE</th>
+                    <th>FECHA EMISION</th>
+                    <th>TOTAL A PAGAR</th>
+                    <th>ESTADO</th>
+                </tr>
+              </thead>";
+    $html .= "<tbody>";
 
-    // 3. Recorrer los objetos de forma limpia
-    foreach ($clientes as $cliente) {
+    // 3. Iteración de la colección usando el ciclo foreach
+    foreach ($facturas as $factura) {
+        $estadoFormateado = $factura->estado;
+
+        // Reto Avanzado: Si está Pendiente, concatenar el aviso en mayúsculas entre paréntesis
+        if ($factura->estado === "Pendiente") {
+            $estadoFormateado = "Pendiente (PENDIENTE DE COBRO)";
+        }
+
+        // Interpolación de propiedades en celdas con comillas dobles
         $html .= "<tr>
-                    <td>{$cliente->id}</td>
-                    <td>{$cliente->nombre}</td>
-                    <td>{$cliente->telefono}</td>
-                    <td>{$cliente->puntos_altruistas}</td>
+                    <td>{$factura->num_factura}</td>
+                    <td>{$factura->cliente}</td>
+                    <td>{$factura->fecha_emision}</td>
+                    <td>{$factura->total_pagar}</td>
+                    <td>{$estadoFormateado}</td>
                   </tr>";
     }
 
-    $html .= '</tbody>
-            </table>';
+    $html .= "</tbody></table>";
 
-    // 4. Imprimir con un solo echo
+    // 4. Renderizado final en el navegador mediante la instrucción echo
     echo $html;
 });
 
 
-// Ejercicio 2: Panel de Proveedores Internacionales
-Route::get('/proveedores/internacionales', function () {
-    // 1. Colección de objetos proveedores
-    $proveedores = [
-        (object) ['empresa' => 'PharmaEurope', 'pais_origen' => 'Alemania', 'medicamento_principal' => 'Amoxicilina', 'tiempo_entrega_dias' => 12],
-        (object) ['empresa' => 'LatamMeds', 'pais_origen' => 'Colombia', 'medicamento_principal' => 'Ibuprofeno', 'tiempo_entrega_dias' => 8],
-        (object) ['empresa' => 'AsiaHealth Co.', 'pais_origen' => 'India', 'medicamento_principal' => 'Paracetamol', 'tiempo_entrega_dias' => 22],
-    ];
+// =========================================================================
+// Ejercicio 5: Detalle de Factura de Cliente Específica (Ficha Técnica)
+// Ruta: GET /facturas/clientes/detalle/{numero}
+// =========================================================================
+Route::get('/facturas/clientes/detalle/{numero}', function ($numero) { // Recibe el parámetro numérico de la URL
+    // 1. Colección de datos alineada con los registros del ejercicio anterior
+    $facturas = json_decode(json_encode([
+        ["num_factura" => "001", "cliente" => "Karen Criollo", "fecha_emision" => "2026-07-13", "total_pagar" => 150, "estado" => "Pendiente"],
+        ["num_factura" => "002", "cliente" => "Karen Criollo", "fecha_emision" => "2026-07-05", "total_pagar" => 175, "estado" => "Pagada"],
+        ["num_factura" => "003", "cliente" => "Cristofer Guevara", "fecha_emision" => "2026-07-13", "total_pagar" => 200, "estado" => "Pendiente"]
+    ]));
 
-    // 2. Estructura de la tabla
-    $html = '<table border=1 cellspacing=0>
-                <thead>
-                    <tr>
-                        <th>EMPRESA</th>
-                        <th>PAÍS DE ORIGEN</th>
-                        <th>MEDICAMENTO PRINCIPAL</th>
-                        <th>TIEMPO DE ENTREGA (DÍAS)</th>
-                    </tr>
-                </thead>
-                <tbody>';
+    // 2. Inicialización de variables de búsqueda
+    $facturaEncontrada = null;
+    $html = "";
 
-    // 3. Recorrer aplicando la advertencia de demora
-    foreach ($proveedores as $proveedor) {
-        $tiempoTexto = $proveedor->tiempo_entrega_dias;
-        
-        if ($proveedor->tiempo_entrega_dias > 15) {
-            $tiempoTexto .= " <strong>(Demora Crítica)</strong>";
+    // 3. Lógica de Búsqueda: Recorrer el arreglo para validar si coincide con el parámetro de la URL
+    foreach ($facturas as $factura) {
+        if ($factura->num_factura === $numero) {
+            $facturaEncontrada = $factura;
+            break; // Terminar el bucle al hallar la coincidencia
         }
-
-        $html .= "<tr>
-                    <td>{$proveedor->empresa}</td>
-                    <td>{$proveedor->pais_origen}</td>
-                    <td>{$proveedor->medicamento_principal}</td>
-                    <td>{$tiempoTexto}</td>
-                  </tr>";
     }
 
-    $html .= '</tbody>
-            </table>';
+    // 4. Renderizado Condicional de la Ficha Técnica (Uso de bloques div, títulos y listas)
+    if ($facturaEncontrada !== null) {
+        $estadoFicha = $facturaEncontrada->estado;
+        if ($facturaEncontrada->estado === "Pendiente") {
+            $estadoFicha = "Pendiente (PENDIENTE DE COBRO)";
+        }
 
-    // 4. Imprimir el bloque
+        $html .= "<div style='border: 2px solid #000; padding: 15px; width: 45%; font-family: sans-serif;'>";
+        $html .= "<h2>Ficha de Factura: No. {$facturaEncontrada->num_factura}</h2>";
+        $html .= "<hr style='border: 1px solid #000;'>";
+        $html .= "<ul>";
+        $html .= "<li><strong>CLIENTE:</strong> {$facturaEncontrada->cliente}</li>";
+        $html .= "<li><strong>FECHA EMISION:</strong> {$facturaEncontrada->fecha_emision}</li>";
+        $html .= "<li><strong>TOTAL A PAGAR:</strong> {$facturaEncontrada->total_pagar}</li>";
+        $html .= "<li><strong>ESTADO:</strong> {$estadoFicha}</li>";
+        $html .= "</ul>";
+        $html .= "</div>";
+    } else {
+        // En caso de que el código de factura no exista en nuestro arreglo
+        $html .= "<h1 style='font-family: sans-serif; color: red;'>Factura No Encontrada</h1>";
+    }
+
+    // 5. Envío del resultado final al navegador con echo
     echo $html;
 });
-// Ejercicio 3: Inventario Automatizado de Lotes de Medicamentos
-Route::get('/lotes/inventario', function () {
-    // 1. Arreglo de objetos que representa los lotes de la farmacia
-    $lotes = [
-        (object) ['codigo_lote' => 'LOTE-A10', 'nombre_medicamento' => 'Insulina Glargina', 'cantidad_cajas' => 50, 'temperatura_requerida_celsius' => 4],
-        (object) ['codigo_lote' => 'LOTE-B22', 'nombre_medicamento' => 'Loratadina', 'cantidad_cajas' => 120, 'temperatura_requerida_celsius' => 22],
-        (object) ['codigo_lote' => 'LOTE-C05', 'nombre_medicamento' => 'Vacuna Influenza', 'cantidad_cajas' => 30, 'temperatura_requerida_celsius' => 5],
-    ];
 
-    // 2. Estructura de la tabla con el estilo exacto del profesor
-    $html = '<table border=1 cellspacing=0>
-                <thead>
-                    <tr>
-                        <th>CÓDIGO DE LOTE</th>
-                        <th>MEDICAMENTO</th>
-                        <th>CANTIDAD (CAJAS)</th>
-                        <th>TEMPERATURA REQUERIDA</th>
-                    </tr>
-                </thead>
-                <tbody>';
 
-    // 3. Recorrer y evaluar la temperatura para añadir la etiqueta [Requiere Cadena de Frío]
-    foreach ($lotes as $lote) {
-        $nombreMedicamento = $lote->nombre_medicamento;
+// =========================================================================
+// Ejercicio 6: Libro de Facturas de Proveedores (Cálculo de Totales)
+// Ruta: GET /facturas/proveedores/resumen
+// =========================================================================
+Route::get('/facturas/proveedores/resumen', function () {
+    // 1. Declaración del arreglo de objetos representando las facturas de laboratorios proveedores
+    $facturasProveedores = json_decode(json_encode([
+        ["proveedor" => "Laboratorio MK", "nrc" => "1234-5", "monto_sin_iva" => 500],
+        ["proveedor" => "Droguería Santa Inés", "nrc" => "6789-0", "monto_sin_iva" => 1250],
+        ["proveedor" => "Corporación PharmaCare", "nrc" => "4556-1", "monto_sin_iva" => 350],
+        ["proveedor" => "Laboratorios Vijosa", "nrc" => "9988-2", "monto_sin_iva" => 2100]
+    ]));
 
-        // Si la temperatura es menor o igual a 5°C
-        if ($lote->temperatura_requerida_celsius <= 5) {
-            $nombreMedicamento .= " <span style='color: blue; font-weight: bold;'>[Requiere Cadena de Frío]</span>";
-        }
+    // 2. Inicialización de acumuladores para procesar las sumatorias finales (tfoot)
+    $totalSinIva = 0;
+    $totalIva = 0;
+    $totalGeneral = 0;
 
+    // 3. Inicio del diseño estricto de la tabla estructurada
+    $html = "<table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; font-family: sans-serif;'>";
+    $html .= "<thead>
+                <tr style='font-weight: bold;'>
+                    <th>PROVEEDOR</th>
+                    <th>NRC</th>
+                    <th>MONTO SIN IVA</th>
+                    <th>IVA (13%)</th>
+                    <th>MONTO TOTAL</th>
+                </tr>
+              </thead>";
+    $html .= "<tbody>";
+
+    // 4. Lógica de Procesamiento de cálculos matemáticos dentro del ciclo foreach
+    foreach ($facturasProveedores as $fac) {
+        // Cálculo del 13% del IVA e Importe Total por cada elemento de la colección
+        $ivaFila = $fac->monto_sin_iva * 0.13;
+        $montoTotalFila = $fac->monto_sin_iva + $ivaFila;
+
+        // Sumatoria acumulativa de los valores numéricos
+        $totalSinIva += $fac->monto_sin_iva;
+        $totalIva += $ivaFila;
+        $totalGeneral += $montoTotalFila;
+
+        // Armado de celdas inyectando las operaciones resueltas directamente
         $html .= "<tr>
-                    <td>{$lote->codigo_lote}</td>
-                    <td>{$nombreMedicamento}</td>
-                    <td>{$lote->cantidad_cajas}</td>
-                    <td>{$lote->temperatura_requerida_celsius}°C</td>
+                    <td>{$fac->proveedor}</td>
+                    <td>{$fac->nrc}</td>
+                    <td>{$fac->monto_sin_iva}</td>
+                    <td>{$ivaFila}</td>
+                    <td>{$montoTotalFila}</td>
                   </tr>";
     }
+    
+    $html .= "</tbody>";
 
-    // 4. Cerrar la tabla
-    $html .= '</tbody>
-            </table>';
+    // 5. Construcción de la sección tfoot para los totales generales combinando columnas
+    $html .= "<tfoot>
+                <tr style='font-weight: bold;'>
+                    <td colspan='2' style='text-align: right;'>TOTALES GENERALES:</td>
+                    <td>{$totalSinIva}</td>
+                    <td>{$totalIva}</td>
+                    <td>{$totalGeneral}</td>
+                </tr>
+              </tfoot>";
 
-    // 5. Imprimir el contenido final
+    $html .= "</table>";
+
+    // 6. Impresión del bloque completo de datos mediante echo
     echo $html;
 });
